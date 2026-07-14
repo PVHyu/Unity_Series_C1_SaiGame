@@ -3,6 +3,8 @@ using UnityEngine;
 public class FollowPlayer : MonoBehaviour
 {
     [SerializeField] private Transform player;
+    protected float speed = 5f;
+    protected float disLimit = 0.5f;
     void Start()
     {
         
@@ -16,10 +18,10 @@ public class FollowPlayer : MonoBehaviour
     void Follow()
     {
         Vector3 distance = this.player.position - this.transform.position;
-        if(distance.magnitude >= 3)
+        if(distance.magnitude >= this.disLimit)
         {
-            Vector3 targetPoint = this.player.position - distance.normalized * 3;
-            gameObject.transform.position = Vector3.MoveTowards(this.transform.position, targetPoint, 5 * Time.deltaTime);
+            Vector3 targetPoint = this.player.position - distance.normalized * this.disLimit;
+            gameObject.transform.position = Vector3.MoveTowards(this.transform.position, targetPoint, this.speed * Time.deltaTime);
         }
     }
 }
