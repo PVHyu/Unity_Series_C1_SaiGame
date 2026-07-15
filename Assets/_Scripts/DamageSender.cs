@@ -17,7 +17,5 @@ public class DamageSender : MonoBehaviour
         damageReceiver.Receiver(1); // Assuming 1 is the damage amount
 
         this.enemyCtrl.despawner.Despawn();
-
-        Debug.Log(collision.name);
     }
 }

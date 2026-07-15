@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DamageReceiver : MonoBehaviour
 {
-    [SerializeField] private int hp = 3;
+    [SerializeField] private int hp = 12;
 
     public virtual bool IsDead()
     {

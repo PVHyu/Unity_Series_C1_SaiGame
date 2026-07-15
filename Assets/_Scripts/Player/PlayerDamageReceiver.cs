@@ -12,6 +12,11 @@ public class PlayerDamageReceiver : DamageReceiver
     public override void Receiver(int damage)
     {
         base.Receiver(damage);
-        if(this.IsDead()) this.playerCtrl.playerStatus.Dead();
+        if(this.IsDead())
+        {
+            this.playerCtrl.playerStatus.Dead();
+            UIManager.GetInstance().bnGameOver.SetActive(true);
+        } else return;
+        
     }
 }

@@ -4,7 +4,7 @@ public class EnemySpawner : MonoBehaviour
 {
     protected GameObject enemyPrefab;
     protected float timer = 0;
-    protected float delay = 2f;
+    protected float delay = 0.5f;
     
     private void Awake()
     {
@@ -19,6 +19,8 @@ public class EnemySpawner : MonoBehaviour
 
     protected virtual void Spawn()
     {
+        if(PlayerCtrl.instance.damageReceiver.IsDead()) return;
+
         this.timer += Time.deltaTime;
         if(this.timer < this.delay) return;
         this.timer = 0;
