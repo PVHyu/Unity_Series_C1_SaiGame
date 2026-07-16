@@ -12,9 +12,10 @@ public class RoadSpawner : MonoBehaviour
     {
         this.roadPrefab = GameObject.Find("RoadPrefab");
         this.roadSpawnPos = GameObject.Find("RoadSpawnPos");
+        this.roadPrefab.SetActive(false);
 
-        this.roadCurrent = this.roadPrefab;
         this.roadPlayerOrder = (int) this.roadPrefab.transform.position.z;
+        this.Spawn(this.roadPrefab.transform.position);
     } 
 
     private void FixedUpdate()
@@ -24,8 +25,10 @@ public class RoadSpawner : MonoBehaviour
 
     protected virtual void UpdateRoad()
     {
+        if (this.roadCurrent == null) return;
+
         this.distance = Vector2.Distance(PlayerCtrl.instance.transform.position, this.roadCurrent.transform.position);
-        if(this.distance > 5) this.Spawn();
+        if (this.distance > 5f && PlayerCtrl.instance.transform.position.y - this.roadCurrent.transform.position.y > 5f) this.Spawn();
     }
 
     protected virtual void Spawn()
@@ -34,6 +37,13 @@ public class RoadSpawner : MonoBehaviour
         pos.x = 0;
         pos.z = this.roadPlayerOrder;
 
-        this.roadCurrent = Instantiate(this.roadPrefab, pos, this.roadPrefab.transform.rotation);
+        this.Spawn(pos);
+    }
+
+    protected virtual void Spawn(Vector3 position)
+    {
+        this.roadCurrent = Instantiate(this.roadPrefab, position, this.roadPrefab.transform.rotation);
+        this.roadCurrent.transform.parent = transform;
+        this.roadCurrent.SetActive(true);
     }
 }

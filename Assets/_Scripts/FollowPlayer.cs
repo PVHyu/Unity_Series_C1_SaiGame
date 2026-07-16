@@ -1,27 +1,52 @@
+using Unity.Collections;
 using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
     [SerializeField] private Transform player;
-    protected float speed = 5f;
-    protected float disLimit = 0.5f;
-    void Start()
+    [SerializeField] protected float speed = 20f;
+    protected float disLimit = 3f;
+    public float randPos = 0;
+
+    private void Awake()
     {
-        
+        this.FindPlayer();
+        this.randPos = Random.Range(-6, 6);
     }
 
-    void Update()
+    private void FixedUpdate()
     {
+        if (this.player == null)
+        {
+            return;
+        }
+
         Follow();
+    }
+
+    private void FindPlayer()
+    {
+        if (PlayerCtrl.instance != null)
+        {
+            this.player = PlayerCtrl.instance.transform;
+        }
+        else
+        {
+            this.player = GameObject.FindWithTag("Player")?.transform;
+        }
     }
 
     void Follow()
     {
-        Vector3 distance = this.player.position - this.transform.position;
+        Vector3 pos = this.player.position;
+        pos.x = this.randPos;
+        
+
+        Vector3 distance = pos - this.transform.position;
         if(distance.magnitude >= this.disLimit)
         {
-            Vector3 targetPoint = this.player.position - distance.normalized * this.disLimit;
-            gameObject.transform.position = Vector3.MoveTowards(this.transform.position, targetPoint, this.speed * Time.deltaTime);
+            Vector3 targetPoint = pos - distance.normalized * this.disLimit;
+            transform.position = Vector3.MoveTowards(transform.position, targetPoint, this.speed * Time.fixedDeltaTime);
         }
     }
 }

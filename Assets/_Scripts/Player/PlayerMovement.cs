@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public float speedDown = 0.5f;
     public float speedMax = 20f;
     public float speedHorizontal = 3f;
+    public bool autoRun = false;
 
 
 
@@ -24,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     {
         this.pressHorizontal = Input.GetAxis("Horizontal");
         this.pressVertical = Input.GetAxis("Vertical");
+        if(this.autoRun) this.pressVertical = 1;
     }
 
     private void FixedUpdate()
