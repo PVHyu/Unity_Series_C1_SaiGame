@@ -14,6 +14,7 @@ public class Spawner : MonoBehaviour
     public bool isSpawned = false;
     public string spawnPosName = "";
     public string prefabName = "";
+    public int layerOrder = 0;
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class Spawner : MonoBehaviour
         this.spawnPos = GameObject.Find(this.spawnPosName);
         this.objPrefab = GameObject.Find(this.prefabName);
         this.objPrefab.SetActive(false);
+        this.layerOrder = (int) this.objPrefab.transform.position.z;
     }
 
     private void Update()
@@ -29,21 +31,31 @@ public class Spawner : MonoBehaviour
         this.CheckDead();
     }
 
-    protected virtual void Spawn()
+    protected virtual GameObject Spawn()
     {
-         if(this.objects.Count >= this.maxObj) return;
+        if(PlayerCtrl.instance.damageReceiver.IsDead()) return null;
+        if(this.objects.Count >= this.maxObj) return null;
         this.spawnTimer += Time.deltaTime;
-        if(this.spawnTimer < this.spawnDelay) return;
+        if(this.spawnTimer < this.spawnDelay) return null;
         this.spawnTimer = 0;
 
-        GameObject enemy = Instantiate(this.objPrefab);
-        enemy.transform.position = this.spawnPos.transform.position;
-        enemy.transform.parent = transform;
-        enemy.SetActive(true);
+        Vector3 pos = this.spawnPos.transform.position;
+        pos.z = this.layerOrder;
+        return this.Spawn(pos);
+    }
 
-        this.objects.Add(enemy);
+    protected virtual GameObject Spawn(Vector3 pos)
+    {
+        GameObject obj = Instantiate(this.objPrefab);
+        obj.transform.position = pos;
+        obj.transform.parent = transform;
+        obj.SetActive(true);
+
+        this.objects.Add(obj);
 
         isSpawned = true; 
+
+        return obj;
     }
     
     protected virtual void CheckDead() 
